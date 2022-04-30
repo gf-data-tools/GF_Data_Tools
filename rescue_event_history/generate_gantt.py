@@ -15,4 +15,4 @@ with open('doll_obtain_info.tsv','r') as f:
 
 
 fig = px.timeline(df, x_start="Start", x_end="Finish", y="Event", color="Gun")
-fig.write_html("rescue_event_history.html")
+fig.write_html("result.html")
