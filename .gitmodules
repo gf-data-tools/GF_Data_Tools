@@ -1,0 +1,3 @@
+[submodule "GFLData"]
+	path = GFLData
+	url = https://github.com/randomqwerty/GFLData.git
