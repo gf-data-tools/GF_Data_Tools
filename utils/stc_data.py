@@ -13,6 +13,8 @@ def get_stc_data(stc_dir, table_dir=None):
             data = json.load(f)
             if table_dir is not None:
                 data = convert_text(data,text_table)
+            if len(data) > 0 and 'id' in data[0].keys():
+                data = {d['id']: d for d in data}
             stc_data[os.path.splitext(fname)[0]] = data
     return stc_data
     
