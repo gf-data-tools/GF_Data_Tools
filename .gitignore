@@ -1,3 +1,7 @@
 player_analysis/info/user_info.json
 test.ipynb
 *__pycache__
+resource_downloader/output
+resource_downloader/downloader.log
+resource_downloader/build
+resource_downloader/dist
