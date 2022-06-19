@@ -48,7 +48,7 @@ rescue_log = sorted(rescue_log.values(),key=lambda x:x['info']['id'])
 now = datetime.datetime.now()
 today = now.date()
 rich_table = Table(
-    Column('ID',justify='right'),'人形','星级','首次登场活动','首次登场时间','上次登场活动',Column('上次登场时间',justify='right'),
+    Column('ID',justify='right'),'人形','星级','登场活动','登场时间','上次打捞活动','结束时间',Column('距今',justify='right'),
     box=box.ASCII,header_style='default',caption=now.strftime(r'更新时间：%Y-%m-%d %H:%M:%S'),caption_justify='left'
 )
 color = ['magenta','white','cyan','green','yellow','red']
@@ -75,6 +75,7 @@ for record in rescue_log:
         f'{row["first_event"]}',
         f'{row["first_time"]}',
         f'{row["last_event"]}',
+        f'[{color[min((ttl+99)//100,5)]}]{row["last_time"] if record["last"]["time"]<dstr2date("300101") else "常驻"}',
         f'[{color[min((ttl+99)//100,5)]}]{str(ttl)+"天前" if ttl>0 else "当前可捞"}',
     )
 
