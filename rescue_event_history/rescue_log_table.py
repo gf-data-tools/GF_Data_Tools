@@ -1,7 +1,6 @@
 from gf_utils import stc_data
 from gf_utils.stc_data import get_stc_data
 import os
-from pathlib import Path
 import csv
 import datetime
 from rich.console import Console,CONSOLE_HTML_FORMAT
@@ -9,6 +8,7 @@ from rich.terminal_theme import *
 from rich.table import Table,Column,box
 import re
 
+from pathlib import Path
 os.chdir(Path(__file__).resolve().parent)
 
 region = 'ch'
@@ -78,7 +78,7 @@ for record in rescue_log:
         f'[{color[min((ttl+99)//100,5)]}]{str(ttl)+"天前" if ttl>0 else "当前可捞"}',
     )
 
-console = Console(record=True)
+console = Console(record=True,width=9999)
 console.print(rich_table)
 
 format=re.sub('font-family:','font-family:SimSUN,',CONSOLE_HTML_FORMAT)
