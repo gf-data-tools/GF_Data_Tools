@@ -26,10 +26,6 @@ jobs:
         run: |
           pip install -r requirements.txt
           pip install -e .
-      - name: Data Miner Update
-        run: |
-          cd data-miner
-          git pull
       - name: Rescue Event History Update
         run: |
           python rescue_event_history/rescue_log_table.py 
