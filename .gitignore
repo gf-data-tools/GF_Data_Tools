@@ -5,3 +5,4 @@ resource_downloader/output
 resource_downloader/downloader.log
 resource_downloader/build
 resource_downloader/dist
+*.egg-info
