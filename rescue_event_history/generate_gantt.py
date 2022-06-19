@@ -13,6 +13,5 @@ with open('doll_obtain_info.tsv','r') as f:
         for gun in guns:
             df.append(dict(Gun=gun, Start=f'20{begin[:2]}-{begin[2:4]}-{begin[4:6]}', Finish=f'20{end[:2]}-{end[2:4]}-{end[4:6]}', Event=f'{event}-{gun}'))
 
-
 fig = px.timeline(df, x_start="Start", x_end="Finish", y="Event", color="Gun")
 fig.write_html("result.html")

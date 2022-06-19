@@ -4,6 +4,10 @@ import os
 from pathlib import Path
 import csv
 import datetime
+from rich.console import Console,CONSOLE_HTML_FORMAT
+from rich.terminal_theme import *
+from rich.table import Table,Column,box
+import re
 
 os.chdir(Path(__file__).resolve().parent)
 
@@ -41,19 +45,17 @@ with open('doll_obtain_info.tsv', encoding='utf-8') as f:
 rescue_log = sorted(rescue_log.values(),key=lambda x:x['info']['id'])
 
 
-from rich.console import Console,CONSOLE_HTML_FORMAT
-from rich.terminal_theme import *
-from rich.table import Table,Column,box
-import re
-
-now = datetime.datetime.now().date()
-
-rich_table = Table(Column('ID',justify='right'),'人形','星级','首次登场活动','首次登场时间','上次登场活动',Column('上次登场时间',justify='right'),box=box.ASCII,header_style='default')
+now = datetime.datetime.now()
+today = now.date()
+rich_table = Table(
+    Column('ID',justify='right'),'人形','星级','首次登场活动','首次登场时间','上次登场活动',Column('上次登场时间',justify='right'),
+    box=box.ASCII,header_style='default',caption=now.strftime(r'更新时间：%Y-%m-%d %H:%M:%S'),caption_justify='left'
+)
 color = ['magenta','white','cyan','green','yellow','red']
 rows = []
 for record in rescue_log:
     last_time = record['last']['time']
-    ttl = max((now-last_time).days,0)
+    ttl = max((today-last_time).days,0)
     row = dict(
         id=record['info']['id'],
         name=record['info']['name'],
@@ -86,5 +88,3 @@ with open('record.csv','w',encoding='utf-8',newline='') as f:
     writer = csv.DictWriter(f,rows[0].keys())
     writer.writeheader()
     writer.writerows(rows)
-# table = Table('ID','名称')
-# table.add_row()

@@ -1,0 +1,40 @@
+name: rescue_event_update
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  gfl-data-miner-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: git configuration
+        run: |
+          git --version
+          git config user.name "AutoUpdate"
+          git config user.email "<>"
+          git config core.autocrlf true
+          git submodule init
+          git submodule update
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: '3.8'
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Data Miner Update
+        run: |
+          cd data-miner
+          git pull
+      - name: Rescue Event History Update
+        run: |
+          python rescue_event_history/rescue_log_table.py 
+          python rescue_event_history/generate_gantt.py 
+      - name: Git Push
+        run: |
+          git commit -a -m "daily update"
+          git push
