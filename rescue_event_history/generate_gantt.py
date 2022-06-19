@@ -1,6 +1,10 @@
 import pandas as pd
 import plotly.express as px
 
+import os
+from pathlib import Path
+os.chdir(Path(__file__).resolve().parent)
+
 df = []
 
 with open('doll_obtain_info.tsv','r') as f:

@@ -2,3 +2,4 @@ pyjson5
 tqdm
 plotly
 rich
+pandas
