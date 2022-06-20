@@ -59,6 +59,7 @@ for record in rescue_log:
         first_time=record['first']['time'],
         last_event=record['last']['event'],
         last_time=record['last']['time'],
+        delta=deltaday(today,record['last']['time'])
     )
     rows.append(row)
 
@@ -66,17 +67,21 @@ df = pd.DataFrame(rows)
 table = df.style
 
 color = ['magenta','white','cyan','limegreen','yellow','red']
-styles =[
-    {'selector': 'table','props': 'margin-left: auto; margin-right: auto;:center'},
-    {'selector': 'tbody','props': 'color: white;'},
-    {'selector': 'tr','props': 'background-color: #3f3f3f'},
-    {'selector': 'td','props': 'padding:0.5em'},
-    {'selector': 'tr:hover','props': 'background-color:#7f7f7f'},
-    {'selector': 'th','props': 'background-color: blue; color: white;'},
-    {'selector': 'caption','props':'color:black'},
+styles = [
+    {'selector': '','props': 'margin-left: auto; margin-right: auto; text-align: center;padding: 0.5em 1em;width:72em'},
+    {'selector': 'th,td','props': 'padding: 0.5em 1em;'},
+    {'selector': 'thead','props': 'background-color: #EEE; color: #333;display: block;'},
+    {'selector': 'tbody','props': 'color: white;display: block;overflow: auto;width: 100%;height: 90vh;'},
+    {'selector': 'tbody tr:nth-child(even)','props': 'background-color: #222'},
+    {'selector': 'tbody tr:nth-child(odd)','props': 'background-color: #444'},
+    {'selector': 'tbody tr:hover','props': 'background-color:#666'},
+    {'selector': 'caption','props':'color:black;text-align: right;'},
 ] 
+width = [
+    {'selector': f'td:nth-child({c+1}),th:nth-child({c+1})','props':f'width: {w}em;'} for c,w in enumerate([2,8,3,8,6,8,6,10])
+]
 
-table.set_table_styles(styles)
+table.set_table_styles(styles+width)
 
 table.hide(axis="index")
 
@@ -88,17 +93,21 @@ def header_format(key):
         first_event="登场活动",
         first_time="登场时间",
         last_event="最近打捞活动",
-        last_time="结束时间"
+        last_time="结束时间",
+        delta="距今"
     )[key]
 table.format_index(header_format,axis=1)
 
 def lasttime_format(last_time):
-    retstr = last_time.strftime('%Y-%m-%d') if last_time<dmax else '常驻'
-    delta = deltaday(today,last_time)
-    retstr += f' {delta:>4d}天前' if delta > 0 else ' 当前可捞'
+    return last_time.strftime('%Y-%m-%d') if last_time<dmax else '常驻'
+
+def delta_format(delta):
+    retstr = f'{delta:>4d}天前' if delta > 0 else '当前可捞'
     retstr=re.sub(' ','&ensp;',retstr)
     return retstr
+
 table.format(lasttime_format,subset='last_time')
+table.format(delta_format,subset='delta')
 
 table.set_caption(f'更新时间:{today.strftime("%Y-%m-%d")}').set_table_styles([{
      'selector': 'caption',
@@ -108,8 +117,8 @@ table.set_caption(f'更新时间:{today.strftime("%Y-%m-%d")}').set_table_styles
 rank2color=lambda _,rank: [f'color:{color[r-1]}' for r in rank]
 table.apply(rank2color, subset=['rank','name'], rank=df['rank'])
 
-date2color=lambda _,date: [f'color:{color[min((deltaday(today,d)+99)//100,5)]}'for d in date]
-table.apply(date2color, subset=['last_event','last_time'],date=df['last_time'])
+date2color=lambda _,delta: [f'color:{color[min((d+99)//100,5)]}'for d in delta]
+table.apply(date2color, subset=['last_event','last_time','delta'],delta=df['delta'])
 
 with open('rescue.html','w',encoding='utf-8') as f:
     f.write(table.to_html())
