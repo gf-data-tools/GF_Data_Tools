@@ -3,3 +3,5 @@ tqdm
 plotly
 rich
 pandas
+-e ./
+Jinja2

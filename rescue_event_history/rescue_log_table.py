@@ -1,16 +1,15 @@
+# %%
 from gf_utils import stc_data
 from gf_utils.stc_data import get_stc_data
 import os
 import csv
 import datetime
-from rich.console import Console,CONSOLE_HTML_FORMAT
-from rich.terminal_theme import *
-from rich.table import Table,Column,box
+import pandas as pd
 import re
 
 from pathlib import Path
 os.chdir(Path(__file__).resolve().parent)
-
+# %%
 region = 'ch'
 stc_data = get_stc_data(
     stc_dir=f'../data-miner/data/{region}/stc', 
@@ -44,48 +43,75 @@ with open('doll_obtain_info.tsv', encoding='utf-8') as f:
 
 rescue_log = sorted(rescue_log.values(),key=lambda x:x['info']['id'])
 
+# %%
 
-now = datetime.datetime.now()
-today = now.date()
-rich_table = Table(
-    Column('ID',justify='right'),'人形','星级','登场活动','登场时间','上次打捞活动','结束时间',Column('距今',justify='right'),
-    box=box.ASCII,header_style='default',caption=now.strftime(r'更新时间：%Y-%m-%d %H:%M:%S'),caption_justify='left'
-)
-color = ['magenta','white','cyan','green','yellow','red']
+today = datetime.date.today()
+dmax = datetime.date(2030,1,1)
+deltaday = lambda d1,d2: max((d1-d2).days,0)
 rows = []
 for record in rescue_log:
     last_time = record['last']['time']
-    ttl = max((today-last_time).days,0)
     row = dict(
         id=record['info']['id'],
         name=record['info']['name'],
         rank=record['info']['rank'],
         first_event=record['first']['event'],
-        first_time=record['first']['time'].strftime(r'%Y-%m-%d'),
+        first_time=record['first']['time'],
         last_event=record['last']['event'],
-        last_time=record['last']['time'].strftime(r'%Y-%m-%d'),
-        ttl=ttl
+        last_time=record['last']['time'],
     )
     rows.append(row)
-    namestr = re.sub('·|[\u00A0]',' ',row["name"])
-    rich_table.add_row(
-        f'{row["id"]}',
-        f'[{color[row["rank"]-1]}]{namestr}',
-        f'[{color[row["rank"]-1]}]{row["rank"]}',
-        f'{row["first_event"]}',
-        f'{row["first_time"]}',
-        f'{row["last_event"]}',
-        f'[{color[min((ttl+99)//100,5)]}]{row["last_time"] if record["last"]["time"]<dstr2date("300101") else "常驻"}',
-        f'[{color[min((ttl+99)//100,5)]}]{str(ttl)+"天前" if ttl>0 else "当前可捞"}',
-    )
 
-console = Console(record=True,width=9999)
-console.print(rich_table)
+df = pd.DataFrame(rows)
+table = df.style
 
-format=re.sub('font-family:','font-family:SimSUN,',CONSOLE_HTML_FORMAT)
-console.save_html('rescue.html',theme=DIMMED_MONOKAI,code_format=format)
+color = ['magenta','white','cyan','limegreen','yellow','red']
+styles =[
+    {'selector': 'table','props': 'margin-left: auto; margin-right: auto;:center'},
+    {'selector': 'tbody','props': 'color: white;'},
+    {'selector': 'tr','props': 'background-color: #3f3f3f'},
+    {'selector': 'td','props': 'padding:0.5em'},
+    {'selector': 'tr:hover','props': 'background-color:#7f7f7f'},
+    {'selector': 'th','props': 'background-color: blue; color: white;'},
+    {'selector': 'caption','props':'color:black'},
+] 
 
-with open('record.csv','w',encoding='utf-8',newline='') as f:
-    writer = csv.DictWriter(f,rows[0].keys())
-    writer.writeheader()
-    writer.writerows(rows)
+table.set_table_styles(styles)
+
+table.hide(axis="index")
+
+def header_format(key):
+    return dict(
+        id="ID",
+        name="人形",
+        rank="星级",
+        first_event="登场活动",
+        first_time="登场时间",
+        last_event="最近打捞活动",
+        last_time="结束时间"
+    )[key]
+table.format_index(header_format,axis=1)
+
+def lasttime_format(last_time):
+    retstr = last_time.strftime('%Y-%m-%d') if last_time<dmax else '常驻'
+    delta = deltaday(today,last_time)
+    retstr += f' {delta:>4d}天前' if delta > 0 else ' 当前可捞'
+    retstr=re.sub(' ','&ensp;',retstr)
+    return retstr
+table.format(lasttime_format,subset='last_time')
+
+table.set_caption(f'更新时间:{today.strftime("%Y-%m-%d")}').set_table_styles([{
+     'selector': 'caption',
+     'props': 'caption-side: bottom;'
+ }], overwrite=False)
+
+rank2color=lambda _,rank: [f'color:{color[r-1]}' for r in rank]
+table.apply(rank2color, subset=['rank','name'], rank=df['rank'])
+
+date2color=lambda _,date: [f'color:{color[min((deltaday(today,d)+99)//100,5)]}'for d in date]
+table.apply(date2color, subset=['last_event','last_time'],date=df['last_time'])
+
+with open('rescue.html','w',encoding='utf-8') as f:
+    f.write(table.to_html())
+
+# %%
