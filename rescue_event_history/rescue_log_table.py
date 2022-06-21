@@ -120,7 +120,8 @@ table.apply(rank2color, subset=['rank','name'], rank=df['rank'])
 date2color=lambda _,delta: [f'color:{color[min((d+99)//100,5)]}'for d in delta]
 table.apply(date2color, subset=['last_event','last_time','delta'],delta=df['delta'])
 
-with open('rescue.html','w',encoding='utf-8') as f:
-    f.write(table.to_html())
+table.to_html('rescue.html')
+df.to_csv('rescue.csv')
+df.to_pickle('rescue.pkl')
 
 # %%
