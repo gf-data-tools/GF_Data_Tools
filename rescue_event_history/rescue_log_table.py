@@ -46,8 +46,6 @@ rescue_log = sorted(rescue_log.values(),key=lambda x:x['info']['id'])
 # %%
 
 today = datetime.date.today()
-dmax = datetime.date(2030,1,1)
-deltaday = lambda d1,d2: max((d1-d2).days,0)
 rows = []
 for record in rescue_log:
     last_time = record['last']['time']
@@ -59,14 +57,12 @@ for record in rescue_log:
         first_time=record['first']['time'],
         last_event=record['last']['event'],
         last_time=record['last']['time'],
-        delta=deltaday(today,record['last']['time'])
+        delta='',
     )
     rows.append(row)
-
 df = pd.DataFrame(rows)
-table = df.style
 
-color = ['magenta','white','cyan','limegreen','yellow','red']
+table = df.style
 styles = [
     {'selector': '','props': 'margin-left: auto; margin-right: auto; text-align: center;padding: 0.5em 1em;width:72em'},
     {'selector': 'th,td','props': 'padding: 0.5em 1em;'},
@@ -80,7 +76,6 @@ styles = [
 width = [
     {'selector': f'td:nth-child({c+1}),th:nth-child({c+1})','props':f'width: {w}em;'} for c,w in enumerate([2,8,3,8,6,8,6,10])
 ]
-
 table.set_table_styles(styles+width)
 
 table.hide(axis="index")
@@ -98,30 +93,39 @@ def header_format(key):
     )[key]
 table.format_index(header_format,axis=1)
 
-def lasttime_format(last_time):
-    return last_time.strftime('%Y-%m-%d') if last_time<dmax else '常驻'
+html_string = '''
+{table}
+<script>
+var now = new Date().getTime()
+var daymax = new Date("2030-01-01").getTime()
+var colors = ["magenta","white","cyan","limegreen","yellow","red"]
+var col0s = document.getElementsByClassName("data col0")
+var col1s = document.getElementsByClassName("data col1")
+var col2s = document.getElementsByClassName("data col2")
+var col5s = document.getElementsByClassName("data col5")
+var col6s = document.getElementsByClassName("data col6")
+var col7s = document.getElementsByClassName("data col7")
+for (let i=0; i < col6s.length; i++) {{
+    var rank_color = colors[col2s[i].textContent-1]
+    col0s[i].style.color=rank_color
+    col1s[i].style.color=rank_color
+    col2s[i].style.color=rank_color
+    var last = new Date(col6s[i].textContent).getTime()
+    var days = Math.floor((now-last) / (1000 * 60 * 60 * 24));
+    if(last==daymax) col6s[i].textContent = "常驻"
+    console.log(last-daymax,col6s[i].textContent)
+    if (days <= 0) col7s[i].textContent="当前可捞"
+    else col7s[i].textContent=days+"天前"
+    var day_color = colors[Math.max(0,Math.min(Math.floor((days+89)/90),5))]
+    col5s[i].style.color=day_color
+    col6s[i].style.color=day_color
+    col7s[i].style.color=day_color
+}}
+</script>
+'''
 
-def delta_format(delta):
-    retstr = f'{delta:>4d}天前' if delta > 0 else '当前可捞'
-    retstr=re.sub(' ','&ensp;',retstr)
-    return retstr
-
-table.format(lasttime_format,subset='last_time')
-table.format(delta_format,subset='delta')
-
-table.set_caption(f'更新时间:{today.strftime("%Y-%m-%d")}').set_table_styles([{
-     'selector': 'caption',
-     'props': 'caption-side: bottom;'
- }], overwrite=False)
-
-rank2color=lambda _,rank: [f'color:{color[r-1]}' for r in rank]
-table.apply(rank2color, subset=['rank','name'], rank=df['rank'])
-
-date2color=lambda _,delta: [f'color:{color[min((d+99)//100,5)]}'for d in delta]
-table.apply(date2color, subset=['last_event','last_time','delta'],delta=df['delta'])
-
-table.to_html('rescue.html')
+with open('rescue.html','w',encoding='utf-8') as f:
+    f.write(html_string.format(table=table.to_html()))
 df.to_csv('rescue.csv')
-df.to_pickle('rescue.pkl')
 
 # %%
