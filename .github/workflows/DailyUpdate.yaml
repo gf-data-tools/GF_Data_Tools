@@ -1,12 +1,12 @@
-name: rescue_event_update
+name: Daily Update
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 3 * * *'
   workflow_dispatch:
 
 jobs:
-  gfl-data-miner-workflow:
+  DailyUpdate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,6 +21,12 @@ jobs:
           git config core.autocrlf true
           git submodule init
           git submodule update
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DD
+          utcOffset: "+08:00"
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
@@ -32,7 +38,8 @@ jobs:
         run: |
           python rescue_event_history/rescue_log_table.py 
           python rescue_event_history/generate_gantt.py 
-          git commit -a -m "daily update for rescue event history"
+          python enemy_team_analyze/enemy_team_analyze.py 
+          git commit -a -m "Daily auto update ${{ steps.current-time.outputs.formattedTime }}"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
