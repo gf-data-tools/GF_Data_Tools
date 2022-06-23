@@ -20,7 +20,7 @@ jobs:
           git config user.email "<>"
           git config core.autocrlf true
           git submodule init
-          git submodule update
+          git submodule update --rebase --recursive
       - name: Get current time
         uses: josStorer/get-current-time@v2
         id: current-time
