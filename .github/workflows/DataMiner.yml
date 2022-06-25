@@ -13,18 +13,27 @@ on:
     
 
 jobs:
-  gfl-data-miner-workflow:
+  gfl-data-miner-update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          submodules: 'recursive'
       - name: git
         run: |
           git --version
-          git config user.name "AutoUpdate"
-          git config user.email "<>"
-          git config core.autocrlf true
-          git submodule init
-          git submodule update --rebase --remote data-miner
+          git config --global user.name "AutoUpdate"
+          git config --global user.email "<>"
+          git config --global core.autocrlf true
+          git submodule foreach --recursive git checkout main
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DD
+          utcOffset: "+08:00"
+
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
@@ -33,3 +42,9 @@ jobs:
         run: pip install -r data-miner/requirements.txt
       - name: Data Miner
         run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch' }} 
+      - name: Commit
+        run: git commit -a -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
+      - name: Push changes
+        run: |
+          git submodule foreach --recursive git push
+          git push
