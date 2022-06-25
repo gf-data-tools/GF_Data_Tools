@@ -1,8 +1,8 @@
 name: AutoUpdate
 
 on:
-  # schedule:
-  #   - cron: '0 3 * * *'
+  schedule:
+    - cron: '0 3 * * *'
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
           git config user.email "<>"
           git config core.autocrlf true
           git submodule init
-          git submodule update --rebase --recursive
+          git submodule update --rebase --remote
       - name: Get current time
         uses: josStorer/get-current-time@v2
         id: current-time
@@ -35,10 +35,10 @@ jobs:
         run: |
           pip install -r requirements.txt
       - name: Rescue Event History Update
+          # python rescue_event_history/rescue_log_table.py 
+          # python rescue_event_history/generate_gantt.py 
+          # python enemy_team_analyze/enemy_team_analyze.py 
         run: |
-          python rescue_event_history/rescue_log_table.py 
-          python rescue_event_history/generate_gantt.py 
-          python enemy_team_analyze/enemy_team_analyze.py 
           git commit -a -m "Daily auto update ${{ steps.current-time.outputs.formattedTime }}"
       - name: Push changes
         uses: ad-m/github-push-action@master

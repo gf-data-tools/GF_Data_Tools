@@ -1,0 +1,35 @@
+name: gfl-data-miner auto update bot
+
+on:
+  workflow_dispatch:
+    inputs:
+      cmdargs:
+        description: 'Commandline Arguments'     
+        required: false
+        default: 'tw kr jp us ch' 
+        type: string
+  schedule:
+    - cron: '0 0/3 * * *'
+    
+
+jobs:
+  gfl-data-miner-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: git
+        run: |
+          git --version
+          git config user.name "AutoUpdate"
+          git config user.email "<>"
+          git config core.autocrlf true
+          git submodule init
+          git submodule update --rebase --remote data-miner
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: '3.8'
+      - name: Install Python dependencies
+        run: pip install -r data-miner/requirements.txt
+      - name: Data Miner
+        run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch' }} 
