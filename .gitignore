@@ -7,3 +7,4 @@ resource_downloader/build
 resource_downloader/dist
 *.egg-info
 .vscode
+develop_log_catcher

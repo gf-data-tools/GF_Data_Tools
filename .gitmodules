@@ -3,3 +3,8 @@
 	url = https://github.com/ZeroRin/gfl-data-miner-python.git
 	branch = main
 	update = rebase
+[submodule "data"]
+	path = data
+	url = https://github.com/gf-data-tools/gfl-data.git
+	branch = main
+	update = rebase
