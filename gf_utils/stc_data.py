@@ -4,18 +4,21 @@ import json
 from .text_table import TextTable
 import logging
 # %%
-def get_stc_data(stc_dir, table_dir=None,subset=None):
+def get_stc_data(stc_dir, table_dir=None,subset=None,to_dict=True):
     stc_data = dict()
     if table_dir is not None:
         text_table = TextTable(table_dir)
     for fname in os.listdir(stc_dir):
         if subset is not None and os.path.splitext(fname)[0] not in subset:
             continue
+        if fname=='catchdata':
+            continue
+        logging.debug(f'Reading {fname}')
         with open(os.path.join(stc_dir,fname),encoding='utf-8') as f:
             data = json.load(f)
             if table_dir is not None:
                 data = convert_text(data,text_table)
-            if len(data) > 0 and 'id' in data[0].keys():
+            if len(data) > 0 and 'id' in data[0].keys() and to_dict:
                 data = {d['id']: d for d in data}
             stc_data[os.path.splitext(fname)[0]] = data
     return stc_data

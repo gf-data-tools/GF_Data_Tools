@@ -9,7 +9,7 @@ class TextTable():
         for fname in os.listdir(table_dir):
             if fname == 'tableconfig.txt':
                 continue
-            logging.debug(f'processing {fname}')
+            logging.debug(f'Reading {fname}')
             with open(os.path.join(table_dir,fname),'r',encoding='utf-8') as f:
                 reader = csv.reader(f)
                 for row in reader:

@@ -39,7 +39,7 @@ jobs:
           # python rescue_event_history/generate_gantt.py 
           # python enemy_team_analyze/enemy_team_analyze.py 
         run: |
-          git commit -a -m "Daily auto update ${{ steps.current-time.outputs.formattedTime }}"
+          git diff-index --quiet HEAD || git commit -a -m "Daily auto update ${{ steps.current-time.outputs.formattedTime }}"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:

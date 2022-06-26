@@ -39,7 +39,8 @@ jobs:
         with:
           python-version: '3.8'
       - name: Install Python dependencies
-        run: pip install -r data-miner/requirements.txt
+        run: |
+          pip install -r data-miner/requirements.txt
       - name: Data Miner
         run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch' }} 
       - name: Commit
