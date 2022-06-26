@@ -3,5 +3,5 @@ tqdm
 plotly
 rich
 pandas
--e ./
+git+https://github.com/gf-data-tools/GF_Data_Tools.git
 Jinja2

@@ -11,8 +11,8 @@ os.chdir(Path(__file__).resolve().parent)
 # %%
 region = 'ch'
 stc_data = get_stc_data(
-    stc_dir=f'../data-miner/data/{region}/stc', 
-    table_dir=f'../data-miner/data/{region}/asset/table',
+    stc_dir=f'../data/{region}/stc', 
+    table_dir=f'../data/{region}/asset/table',
     subset=['enemy_character_type','enemy_in_team','enemy_team','spot','mission'],
 )
 

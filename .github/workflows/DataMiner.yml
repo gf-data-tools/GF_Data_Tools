@@ -25,7 +25,7 @@ jobs:
           git --version
           git config --global user.name "AutoUpdate"
           git config --global user.email "<>"
-          git config --global core.autocrlf true
+          git config --global core.autocrlf input
           git submodule foreach --recursive git checkout main
       - name: Get current time
         uses: josStorer/get-current-time@v2
@@ -47,13 +47,19 @@ jobs:
         id: difference
         run: |
           git add .
+          git diff-index HEAD
           git diff-index --quiet HEAD || echo '::set-output name=diff::true'
       - name: SubsequentChanges
-        if: steps.difference.outputs.diff == true
+        if: steps.difference.outputs.diff=='true'
         run: |
           pip install -r requirements.txt
           python enemy_team_analyze/enemy_team_analyze.py
           python enemy_stats_analyze/main.py
+          cd resource_downloader
+          python pack_resdata.py
+          git add .
+          git diff-index --quiet HEAD || git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
+          cd ..
           git add .
           git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
       - name: Push changes
