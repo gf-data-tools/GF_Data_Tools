@@ -43,10 +43,19 @@ jobs:
           pip install -r data-miner/requirements.txt
       - name: Data Miner
         run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch' }} 
-      - name: Commit
+      - name: CheckDifference
+        id: difference
         run: |
           git add .
-          git diff-index --quiet HEAD || git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
+          git diff-index --quiet HEAD || echo '::set-output name=diff::true'
+      - name: SubsequentChanges
+        if: steps.difference.outputs.diff == true
+        run: |
+          pip install -r requirements.txt
+          python enemy_team_analyze/enemy_team_analyze.py
+          python enemy_stats_analyze/main.py
+          git add .
+          git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
       - name: Push changes
         run: |
           git submodule foreach --recursive git push

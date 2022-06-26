@@ -1,0 +1,45 @@
+name: rescue-event-history auto update bot
+
+on:
+  push:
+    paths:
+      - 'rescue_event_history/doll_obtain_info.tsv'
+  workflow_dispatch:
+
+jobs:
+  DailyUpdate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: true # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - name: git configuration
+        run: |
+          git --version
+          git config user.name "AutoUpdate"
+          git config user.email "<>"
+          git config core.autocrlf true
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DD
+          utcOffset: "+08:00"
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: '3.8'
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Rescue Event History Update
+          python rescue_event_history/rescue_log_table.py 
+          python rescue_event_history/generate_gantt.py 
+        run: |
+          git diff-index --quiet HEAD || git commit -a -m "rescue_event_history auto update ${{ steps.current-time.outputs.formattedTime }}"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
