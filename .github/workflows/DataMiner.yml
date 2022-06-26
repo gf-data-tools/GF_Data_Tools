@@ -43,7 +43,9 @@ jobs:
       - name: Data Miner
         run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch' }} 
       - name: Commit
-        run: git commit -a -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
+        run: |
+          git add .
+          git diff-index --quiet HEAD || git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
       - name: Push changes
         run: |
           git submodule foreach --recursive git push
