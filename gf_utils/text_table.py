@@ -13,7 +13,7 @@ class TextTable():
             logging.debug(f'Reading {fname}')
             with open(os.path.join(table_dir,fname),'r',encoding='utf-8') as f:
                 for line in f.readlines():
-                    k,*vs = line.split(',')
+                    k,*vs = line.strip().split(',')
                     v = ','.join(vs)
                     v = re.sub(r'//c',',',v)
                     v = re.sub(r'//n','\n',v)
