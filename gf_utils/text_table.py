@@ -13,11 +13,11 @@ class TextTable():
             logging.debug(f'Reading {fname}')
             with open(os.path.join(table_dir,fname),'r',encoding='utf-8') as f:
                 for line in f.readlines():
-                    k,*vs = line.strip().split(',')
+                    k,*vs = line.split(',')
                     v = ','.join(vs)
                     v = re.sub(r'//c',',',v)
                     v = re.sub(r'//n','\n',v)
-                    self.dict[k] = v
+                    self.dict[k] = v.strip()
     
     def __call__(self, k):
         return self.dict.get(k, k)
