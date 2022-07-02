@@ -76,6 +76,7 @@ jobs:
       - name: Prepare Github Pages files
         if: steps.difference.outputs.diff=='true'
         run: |
+          cp README.md gh-pages/README.md
           mkdir -p gh-pages/rescue_event_history
           cp rescue_event_history/*.html gh-pages/rescue_event_history/
       - name: Deploy
