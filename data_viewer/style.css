@@ -1,0 +1,58 @@
+body {
+  background-color: #333333;
+  font-family: 'Noto Sans', 'Noto Sans SC', sans-serif;
+  color: #EAEAEA;
+}
+a {
+  color: #EAEAEA;
+}
+td {
+  background-color: #333333;
+  font-family: 'Noto Sans', 'Noto Sans SC', sans-serif;
+  color: #EAEAEA;
+}
+th {
+  text-align: left;
+}
+#container_previous {
+	background-color: #EAEAEA;
+}
+#container_next {
+	background-color: #EAEAEA;
+}
+#container_paginate{
+	background-color: #EAEAEA;
+}
+#container_info{
+	color: #EAEAEA;
+}
+div.dtsb-searchBuilder button.dtsb-button,
+div.dtsb-searchBuilder select {
+	background-color: #EAEAEA;
+}
+div.dtsb-searchBuilder div.dtsb-titleRow button.dtsb-clearAll {
+	background-color: #EAEAEA;
+}
+div.dtsb-searchBuilder div.dtsb-group button.dtsb-clearGroup {
+	background-color: #EAEAEA;
+}
+div.dtsb-searchBuilder div.dtsb-logicContainer button {
+	background-color: #EAEAEA;
+}
+div.dataTables_wrapper .dataTables_filter {
+	color: #EAEAEA;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+    color: #EAEAEA;
+}
+.dataTables_wrapper .dataTables_length select {
+    background-color: #EAEAEA;
+}
+button.dt-button, div.dt-button, a.dt-button, input.dt-button {
+    background-color: #EAEAEA;
+}
+table.fixedHeader-floating {
+  position: fixed !important;
+  background-color: #333333;
+}
