@@ -73,6 +73,11 @@ jobs:
         run: |
           git add .
           git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
+      - name: Prepare Github Pages files
+        if: steps.difference.outputs.diff=='true'
+        run: |
+          mkdir -p gh-pages/rescue_event_history
+          cp rescue_event_history/*.html gh-pages/rescue_event_history/
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
