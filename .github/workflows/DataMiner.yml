@@ -49,17 +49,28 @@ jobs:
           git add .
           git diff-index HEAD
           git diff-index --quiet HEAD || echo '::set-output name=diff::true'
-      - name: SubsequentChanges
+      - name: Analysis Updates
         if: steps.difference.outputs.diff=='true'
         run: |
           pip install -r requirements.txt
           python enemy_team_analyze/enemy_team_analyze.py
           python enemy_stats_analyze/main.py
+      - name: Resource Downloader Update
+        if: steps.difference.outputs.diff=='true'
+        run: |
           cd resource_downloader
           python pack_resdata.py
           git add .
           git diff-index --quiet HEAD || git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
           cd ..
+      - name: Anti Harmonization Update
+        if: steps.difference.outputs.diff=='true'
+        run: |
+          python anti-harmonization/main.py
+          cp anti-harmonization/catchdata.dat outputs/catchdata.dat
+      - name: Commit Changes
+        if: steps.difference.outputs.diff=='true'
+        run: |
           git add .
           git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
       - name: Push changes
