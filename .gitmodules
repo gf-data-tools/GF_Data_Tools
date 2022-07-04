@@ -18,3 +18,8 @@
 	url = https://github.com/gf-data-tools/gf-utils.git
 	branch = main
 	update = rebase
+[submodule "anti-harmonization"]
+	path = anti-harmonization
+	url = https://github.com/gf-data-tools/anti-harmonization.git
+	branch = main
+	update = rebase
