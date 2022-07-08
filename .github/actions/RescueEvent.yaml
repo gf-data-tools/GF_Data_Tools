@@ -1,0 +1,25 @@
+name: 'RescueEvent update'
+description: 'Generate table and gantt chart for rescue event'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get current time
+      uses: josStorer/get-current-time@v2
+      id: current-time
+      with:
+        format: YYYY-MM-DD
+        utcOffset: "+08:00"
+    - name: GenerateTable
+      run: |
+        python rescue_event_history/rescue_log_table.py 
+        python rescue_event_history/generate_gantt.py 
+    - name: Prepare gh-pages
+      run: |
+        mkdir -p gh-pages/rescue_event_history
+        cp rescue_event_history/*.html gh-pages/rescue_event_history/
+    - name: Commit
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Rescue event history auto update at ${{ steps.current-time.outputs.formattedTime }}"
+        file_pattern: rescue_event_history/*.html gh-pages/rescue_event_history/*.html

@@ -19,7 +19,7 @@ jobs:
           git --version
           git config user.name "AutoUpdate"
           git config user.email "<>"
-          git config core.autocrlf true
+          git config core.autocrlf input
       - name: Get current time
         uses: josStorer/get-current-time@v2
         id: current-time
@@ -34,10 +34,7 @@ jobs:
         run: |
           pip install -r requirements.txt
       - name: Rescue Event History Update
-          python rescue_event_history/rescue_log_table.py 
-          python rescue_event_history/generate_gantt.py 
-        run: |
-          git diff-index --quiet HEAD || git commit -a -m "rescue_event_history auto update ${{ steps.current-time.outputs.formattedTime }}"
+        uses: .github/actions/RescueEvent
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
