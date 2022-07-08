@@ -1,4 +1,4 @@
-name: rescue-event-history auto update bot
+name: Rescue Event Auto Update
 
 on:
   push:
@@ -7,13 +7,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  DailyUpdate:
+  RescueEventUpdate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          persist-credentials: true # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
-          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          submodules: 'recursive'
       - name: git configuration
         run: |
           git --version
@@ -34,7 +34,12 @@ jobs:
         run: |
           pip install -r requirements.txt
       - name: Rescue Event History Update
-        uses: .github/actions/RescueEvent
+        uses: ./.github/actions/RescueEvent
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
