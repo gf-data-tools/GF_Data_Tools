@@ -10,6 +10,7 @@ on:
         type: string
   schedule:
     - cron: '0 0/3 * * *'
+    - cron: '0 2-14 * * 4'
     
 
 jobs:
