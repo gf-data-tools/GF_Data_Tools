@@ -32,7 +32,7 @@ jobs:
         uses: josStorer/get-current-time@v2
         id: current-time
         with:
-          format: YYYY-MM-DD
+          format: YYYY-MM-DD HH:mm:ss
           utcOffset: "+08:00"
 
       - name: Setup Python
@@ -62,7 +62,7 @@ jobs:
           cd resource_downloader
           python pack_resdata.py
           git add .
-          git diff-index --quiet HEAD || git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
+          git diff-index --quiet HEAD || git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
           cd ..
       - name: Anti Harmonization Update
         if: steps.difference.outputs.diff=='true'
@@ -73,7 +73,7 @@ jobs:
         if: steps.difference.outputs.diff=='true'
         run: |
           git add .
-          git commit -m "data-miner auto update ${{ steps.current-time.outputs.formattedTime }}"
+          git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
       - name: Prepare Github Pages files
         if: steps.difference.outputs.diff=='true'
         run: |
