@@ -8,7 +8,7 @@ runs:
       uses: josStorer/get-current-time@v2
       id: current-time
       with:
-        format: YYYY-MM-DD
+        format: YYYY-MM-DD HH:mm:ss
         utcOffset: "+08:00"
     - name: GenerateTable
       shell: bash
@@ -23,5 +23,5 @@ runs:
     - name: Commit
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: "Rescue event history auto update at ${{ steps.current-time.outputs.formattedTime }}"
+        commit_message: "by RescueEvent at ${{ steps.current-time.outputs.formattedTime }}"
         file_pattern: rescue_event_history/*.html gh-pages/rescue_event_history/*.html
