@@ -23,3 +23,8 @@
 	url = https://github.com/gf-data-tools/anti-harmonization.git
 	branch = main
 	update = rebase
+[submodule "gfl-data-alpha"]
+	path = gfl-data-alpha
+	url = https://github.com/gf-data-tools/gfl-data-alpha.git
+	branch = main
+	update = rebase
