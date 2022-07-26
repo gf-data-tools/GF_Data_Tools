@@ -48,8 +48,8 @@ jobs:
         id: difference
         run: |
           git add .
-          git diff-index HEAD
-          git diff-index --quiet HEAD || echo '::set-output name=diff::true'
+          git log --branches --not --remotes
+          git log --branches --not --remotes && echo '::set-output name=diff::true'
       - name: Analysis Updates
         if: steps.difference.outputs.diff=='true'
         run: |
