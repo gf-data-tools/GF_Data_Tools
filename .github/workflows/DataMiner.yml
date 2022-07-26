@@ -43,7 +43,7 @@ jobs:
         run: |
           pip install -r data-miner/requirements.txt
       - name: Data Miner
-        run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch' }} 
+        run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} 
       - name: CheckDifference
         id: difference
         run: |
