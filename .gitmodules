@@ -28,23 +28,29 @@
 	path = data/us
 	url = https://github.com/gf-data-tools/gf-data-us.git
 	branch = main
+	update = rebase
 [submodule "data_module/ch"]
 	path = data/ch
 	url = https://github.com/gf-data-tools/gf-data-ch.git
 	branch = main
+	update = rebase
 [submodule "data_module/tw"]
 	path = data/tw
 	url = https://github.com/gf-data-tools/gf-data-tw.git
 	branch = main
+	update = rebase
 [submodule "data_module/kr"]
 	path = data/kr
 	url = https://github.com/gf-data-tools/gf-data-kr.git
 	branch = main
+	update = rebase
 [submodule "data_module/jp"]
 	path = data/jp
 	url = https://github.com/gf-data-tools/gf-data-jp.git
 	branch = main
+	update = rebase
 [submodule "data_module/at"]
 	path = data/at
 	url = https://github.com/gf-data-tools/gf-data-at.git
 	branch = main
+	update = rebase
