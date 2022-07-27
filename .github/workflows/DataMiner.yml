@@ -44,20 +44,21 @@ jobs:
           pip install -r data-miner/requirements.txt
       - name: Data Miner
         run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} 
-      - name: CheckDifference
-        id: difference
-        run: |
-          git add .
-          git log --branches --not --remotes
-          git log --branches --not --remotes && echo '::set-output name=diff::true'
+      - name: Check for new commits
+        id: check-new-commits
+        uses: adriangl/check-new-commits-action@v1
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          seconds: 300
+          branch: 'main'
       - name: Analysis Updates
-        if: steps.difference.outputs.diff=='true'
+        if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
         run: |
           pip install -r requirements.txt
           python enemy_team_analyze/enemy_team_analyze.py
           python enemy_stats_analyze/main.py
       - name: Resource Downloader Update
-        if: steps.difference.outputs.diff=='true'
+        if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
         run: |
           cd resource_downloader
           python pack_resdata.py
@@ -65,26 +66,15 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
           cd ..
       - name: Anti Harmonization Update
-        if: steps.difference.outputs.diff=='true'
+        if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
         run: |
           python anti-harmonization/main.py
           cp anti-harmonization/catchdata.dat outputs/catchdata.dat
       - name: Commit Changes
-        if: steps.difference.outputs.diff=='true'
+        if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
         run: |
           git add .
           git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
-      - name: Prepare Github Pages files
-        if: steps.difference.outputs.diff=='true'
-        run: |
-          cp README.md gh-pages/README.md
-          mkdir -p gh-pages/rescue_event_history
-          cp rescue_event_history/*.html gh-pages/rescue_event_history/
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./gh-pages
       - name: Push changes
         run: |
           git submodule foreach --recursive git push
