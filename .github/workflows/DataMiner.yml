@@ -43,39 +43,27 @@ jobs:
         run: |
           pip install -r data-miner/requirements.txt
       - name: Data Miner
+        id: data-miner
         run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} 
-      - name: Check for new commits
-        id: check-new-commits
-        uses: adriangl/check-new-commits-action@v1
-        with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          seconds: 300
-          branch: 'main'
-      - name: Analysis Updates
-        if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
+      - name: Postprocess on New Commit
+        if: ${{ steps.data-miner.outputs.has-new-commits == 'true' }}
         run: |
+          echo "===Enemy Team Analyze==="
           pip install -r requirements.txt
           python enemy_team_analyze/enemy_team_analyze.py
           python enemy_stats_analyze/main.py
-      - name: Resource Downloader Update
-        if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
-        run: |
+          echo "===Resource Downloader==="
           cd resource_downloader
           python pack_resdata.py
           git add .
           git diff-index --quiet HEAD || git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
           cd ..
-      - name: Anti Harmonization Update
-        if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
-        run: |
+          echo "===Anti Harmonization==="
           python anti-harmonization/main.py
           cp anti-harmonization/catchdata.dat outputs/catchdata.dat
-      - name: Commit Changes
-        if: ${{ steps.check-new-commits.outputs.has-new-commits == 'true' }}
-        run: |
+          echo "===Commit Changes==="
           git add .
           git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
-      - name: Push changes
-        run: |
+          echo "===Push Changes==="
           git submodule foreach --recursive git push
           git push
