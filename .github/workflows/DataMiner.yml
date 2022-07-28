@@ -23,11 +23,13 @@ jobs:
           submodules: 'recursive'
       - name: git
         run: |
-          git --version
+          echo "::group::Git Config"
           git config --global user.name "AutoUpdate"
           git config --global user.email "<>"
           git config --global core.autocrlf input
           git submodule foreach --recursive git checkout main
+          echo "::endgroup::"
+
       - name: Get current time
         uses: josStorer/get-current-time@v2
         id: current-time
@@ -39,31 +41,43 @@ jobs:
         uses: actions/setup-python@v2.2.2
         with:
           python-version: '3.8'
-      - name: Install Python dependencies
-        run: |
-          pip install -r data-miner/requirements.txt
+          
+      - name: Install Data-Miner Dependencies
+        uses: py-actions/py-dependency-install@v3
+        with:
+          path: "data-miner/requirements.txt"
       - name: Data Miner
         id: data-miner
         run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} 
+        
+      - name: Install Tool Dependencies
+        uses: py-actions/py-dependency-install@v3
+        with:
+          path: "requirements.txt"
       - name: Postprocess on New Commit
         if: ${{ steps.data-miner.outputs.has-new-commits == 'true' }}
         run: |
-          echo "===Enemy Team Analyze==="
-          pip install -r requirements.txt
+          echo "::group::Enemy Team Analyze"
           python enemy_team_analyze/enemy_team_analyze.py
           python enemy_stats_analyze/main.py
-          echo "===Resource Downloader==="
+          echo "::endgroup::"
+
+          echo "::group::Resource Downloader"
           cd resource_downloader
           python pack_resdata.py
           git add .
           git diff-index --quiet HEAD || git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
           cd ..
-          echo "===Anti Harmonization==="
+          echo "::endgroup::"
+
+          echo "::group::Anti Harmonization"
           python anti-harmonization/main.py
           cp anti-harmonization/catchdata.dat outputs/catchdata.dat
-          echo "===Commit Changes==="
+          echo "::endgroup::"
+
+          echo "::group::Commit and Push"
           git add .
           git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
-          echo "===Push Changes==="
           git submodule foreach --recursive git push
           git push
+          echo "::endgroup::"
