@@ -14,7 +14,7 @@ stc_data = get_stc_data(
 
 
 # %%
-level_cfg = {i['level']: i for i in stc_data['enemy_standard_attribute']}
+level_cfg = stc_data['enemy_standard_attribute']
 stat_keys = [i for i in level_cfg[1].keys() if i!='level']
 # %%
 level_df = pd.DataFrame.from_dict(level_cfg,orient='index')
