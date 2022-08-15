@@ -51,7 +51,7 @@
 
 		function LoadData(server, file) {
 			// Generate path to JSON file
-			var jsonPath = "https://raw.githubusercontent.com/gf-data-tools/gfl-data-" + server + "/main/formatted/json/" + file + ".json";
+			var jsonPath = "https://raw.githubusercontent.com/gf-data-tools/gf-data-" + server + "/main/formatted/json/" + file + ".json";
 					
 			// Load JSON file and generate table
 			$.getJSON(jsonPath, function(data){
