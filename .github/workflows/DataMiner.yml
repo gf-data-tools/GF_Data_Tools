@@ -11,6 +11,9 @@ on:
   schedule:
     - cron: '0 0/3 * * *'
     - cron: '0 2-14 * * 4'
+  push:
+    paths:
+      - 'data-miner'
     
 
 jobs:
@@ -48,7 +51,7 @@ jobs:
           path: "data-miner/requirements.txt"
       - name: Data Miner
         id: data-miner
-        run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} 
+        run: python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} ${{ github.event_name=='push' && '-f' || '' }}
         
       - name: Install Tool Dependencies
         uses: py-actions/py-dependency-install@v3
