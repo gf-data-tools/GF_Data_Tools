@@ -10,7 +10,7 @@ on:
         type: string
   schedule:
     - cron: '0 0/3 * * *'
-    - cron: '0 2-14 * * 4'
+    - cron: '30 1-13 * * 4'
   push:
     paths:
       - 'data-miner'
