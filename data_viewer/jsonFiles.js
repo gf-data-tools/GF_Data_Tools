@@ -236,7 +236,7 @@ const jsonNames = [
 	'theater_construction',
 	'theater_effect',
 	'theater_event',
-	'theater_incident', 
+	'theater_incident',
 	'theater_reward',
 	'theater_selection',
 	'tips_info',
