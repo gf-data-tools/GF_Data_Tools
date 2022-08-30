@@ -24,7 +24,7 @@ jobs:
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
           submodules: 'recursive'
-
+      - run: git submodule foreach --recursive git checkout main
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
