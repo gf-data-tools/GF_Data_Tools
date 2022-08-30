@@ -1,4 +1,4 @@
-name: Postprocess on ch update
+name: Resource Downloader Update
 
 on:
   workflow_dispatch:
