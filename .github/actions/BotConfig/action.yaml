@@ -1,0 +1,14 @@
+name: 'Bot Config'
+description: 'Config git account for bot'
+
+runs:
+  using: "composite"
+  steps:
+    - name: git
+      shell: bash
+      run: |
+        echo "::group::Git Config"
+        git config --global user.name "AutoUpdate"
+        git config --global user.email "<>"
+        git config --global core.autocrlf input
+        echo "::endgroup::"

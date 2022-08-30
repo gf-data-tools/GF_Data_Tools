@@ -1,0 +1,48 @@
+name: Postprocess on ch update
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/ch'
+    
+
+jobs:
+  post-process-on-ch-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          submodules: 'recursive'
+      - uses: ./.github/actions/BotConfig
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DD HH:mm:ss
+          utcOffset: "+08:00"
+
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: '3.8'
+          
+      - name: Analyze
+        run: |
+          echo "::group::Enemy Team Analyze"
+          python enemy_team_analyze/enemy_team_analyze.py
+          python enemy_stats_analyze/main.py
+          echo "::endgroup::"
+
+          echo "::group::Anti Harmonization"
+          python anti-harmonization/main.py
+          cp anti-harmonization/catchdata.dat outputs/catchdata.dat
+          echo "::endgroup::"
+
+          echo "::group::Commit and Push"
+          git add .
+          git commit -m "by DataAnalyze at ${{ steps.current-time.outputs.formattedTime }}"
+          git submodule foreach --recursive git push
+          git push
+          echo "::endgroup::"
