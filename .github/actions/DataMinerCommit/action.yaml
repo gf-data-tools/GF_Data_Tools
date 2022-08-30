@@ -1,0 +1,24 @@
+name: 'DataMinerCommit'
+description: 'Commit dataminer outputs'
+
+inputs:
+  commit_message:
+    description: Commit message
+    required: true
+  repository:
+    description: Submodule path
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Commit-submodule
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ${{ inputs.commit_message }}
+        repository: ${{ inputs.repository }}
+    - name: Commit-main
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ${{ inputs.commit_message }}
+        file_pattern: ${{ inputs.repository }}

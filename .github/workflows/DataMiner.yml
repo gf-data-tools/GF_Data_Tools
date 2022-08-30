@@ -24,14 +24,6 @@ jobs:
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
           submodules: 'recursive'
-      - name: git
-        run: |
-          echo "::group::Git Config"
-          git config --global user.name "AutoUpdate"
-          git config --global user.email "<>"
-          git config --global core.autocrlf input
-          git submodule foreach --recursive git checkout main
-          echo "::endgroup::"
 
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
@@ -46,18 +38,34 @@ jobs:
         id: data-miner
         run: | 
           python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} ${{ github.event_name=='push' && '-f' || '' }}
-
-      - name: PostProcess
-        if: ${{ steps.data-miner.outputs.has-new-commits == 'true' }}
-        run: |
-          echo "::group::Resource Downloader"
-          cd resource_downloader
-          python pack_resdata.py
-          git add .
-          git diff-index --quiet HEAD || git commit -m "by DataMiner at ${{ steps.current-time.outputs.formattedTime }}"
-          cd ..
-          echo "::endgroup::"
-          echo "::group::Push all updates"
-          git submodule foreach --recursive git push
-          git push
-          echo "::endgroup::"
+      
+      - name: Commit-tw
+        uses: ./.github/actions/DataMinerCommit
+        with:
+          commit_message: ${{ steps.data-miner.outputs.commit-message-tw }}
+          repository: data/tw
+      - name: Commit-kr
+        uses: ./.github/actions/DataMinerCommit
+        with:
+          commit_message: ${{ steps.data-miner.outputs.commit-message-kr }}
+          repository: data/kr
+      - name: Commit-jp
+        uses: ./.github/actions/DataMinerCommit
+        with:
+          commit_message: ${{ steps.data-miner.outputs.commit-message-jp }}
+          repository: data/jp
+      - name: Commit-us
+        uses: ./.github/actions/DataMinerCommit
+        with:
+          commit_message: ${{ steps.data-miner.outputs.commit-message-us }}
+          repository: data/us
+      - name: Commit-ch
+        uses: ./.github/actions/DataMinerCommit
+        with:
+          commit_message: ${{ steps.data-miner.outputs.commit-message-ch }}
+          repository: data/ch
+      - name: Commit-at
+        uses: ./.github/actions/DataMinerCommit
+        with:
+          commit_message: ${{ steps.data-miner.outputs.commit-message-at }}
+          repository: data/at
