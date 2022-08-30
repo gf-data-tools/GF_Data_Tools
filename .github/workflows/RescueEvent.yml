@@ -13,7 +13,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
-          submodules: 'recursive'
+      - name: Checkout ch data
+        uses: actions/checkout@v2
+        with:
+          repository: gf-data-tools/gf-data-ch
+          path: data/ch
+          token: ${{ secrets.PERSONAL_TOKEN }}
       - uses: ./.github/actions/BotConfig
       - name: Get current time
         uses: josStorer/get-current-time@v2
@@ -41,5 +46,5 @@ jobs:
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "by RescueEvent at ${{ steps.current-time.outputs.formattedTime }}"
+          commit_message: "RescueEvent autoupdate at ${{ steps.current-time.outputs.formattedTime }}"
           file_pattern: rescue_event_history/*.html gh-pages/rescue_event_history/*.html

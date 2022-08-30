@@ -14,8 +14,19 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
-          submodules: 'recursive'
-      - uses: ./.github/actions/BotConfig
+      - name: Checkout ch data
+        uses: actions/checkout@v2
+        with:
+          repository: gf-data-tools/gf-data-ch
+          path: data/ch
+          token: ${{ secrets.PERSONAL_TOKEN }}   
+      - name: Checkout Uncensorship
+        uses: actions/checkout@v2
+        with:
+          repository: gf-data-tools/anti-harmonization
+          path: anti-harmonization
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          
       - name: Get current time
         uses: josStorer/get-current-time@v2
         id: current-time
@@ -27,6 +38,9 @@ jobs:
         uses: actions/setup-python@v2.2.2
         with:
           python-version: '3.8'
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
           
       - name: Analyze
         run: |
@@ -39,10 +53,9 @@ jobs:
           python anti-harmonization/main.py
           cp anti-harmonization/catchdata.dat outputs/catchdata.dat
           echo "::endgroup::"
-
-          echo "::group::Commit and Push"
-          git add .
-          git commit -m "by DataAnalyze at ${{ steps.current-time.outputs.formattedTime }}"
-          git submodule foreach --recursive git push
-          git push
-          echo "::endgroup::"
+      
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "DataAnalyze autoupdate at ${{ steps.current-time.outputs.formattedTime }}"
+          file_pattern: outputs/catchdata.dat enemy_team_analyze/*
