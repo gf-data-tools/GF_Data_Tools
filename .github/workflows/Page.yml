@@ -3,7 +3,7 @@ name: Deploy gh-pages
 on:
   push:
     paths:
-      - 'gh-pages'
+      - 'gh-pages/**'
   workflow_dispatch:
 
 jobs:
