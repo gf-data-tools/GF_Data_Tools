@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'data'
+      - '/data/**'
 
 jobs:
   post-process-on-ch-update:
