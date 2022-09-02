@@ -28,6 +28,13 @@ jobs:
       - run: git submodule foreach --recursive git checkout main
       - run: git config --global core.autocrlf input
 
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DD HH:mm:ss
+          utcOffset: "+08:00"
+
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
@@ -43,32 +50,44 @@ jobs:
           python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} ${{ github.event_name=='push' && '-f' || '' }}
       
       - name: Commit-tw
-        uses: ./.github/actions/DataMinerCommit
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-tw }}
           repository: data/tw
       - name: Commit-kr
-        uses: ./.github/actions/DataMinerCommit
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-kr }}
           repository: data/kr
       - name: Commit-jp
-        uses: ./.github/actions/DataMinerCommit
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-jp }}
           repository: data/jp
       - name: Commit-us
-        uses: ./.github/actions/DataMinerCommit
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-us }}
           repository: data/us
       - name: Commit-ch
-        uses: ./.github/actions/DataMinerCommit
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-ch }}
           repository: data/ch
       - name: Commit-at
-        uses: ./.github/actions/DataMinerCommit
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-at }}
           repository: data/at
+      - name: Join Commit message
+        id: commit-msg
+        run: |
+          MESSAGE="${{ join(steps.data-miner.outputs.*,'%0A') }}"
+          echo "::set-output name=message::$MESSAGE"
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: |
+            DataMiner autoupdate at ${{ steps.current-time.outputs.formattedTime }}
+
+            ${{ steps.commit-msg.outputs.message }}
