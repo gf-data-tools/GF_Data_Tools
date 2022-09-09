@@ -31,7 +31,8 @@ ec = ec.groupby(['enemy_team_id']).agg({'member':'|'.join})
 ec
 # %%
 tl = t.join(c,on='enemy_leader').drop(columns='enemy_leader').rename(columns={'name':'leader'})
-tla = tl.merge(a,how='left',left_on='ai',right_on='ai_type').rename(columns={'name':'ai_name'})
+tla = tl.reset_index().merge(a,how='left',left_on='ai',right_on='ai_type')
+tla = tla.rename(columns={'name':'ai_name'}).set_index('id').drop(columns=['ai'])
 tla 
 # %%
 m['name'] = m.apply(lambda x: re.sub('//n','',x['name']).split('|')[0],axis=1)
@@ -39,7 +40,7 @@ ms = s.join(m,on='mission_id').drop(columns=['mission_id'])
 mstl = ms.join(tla,on='enemy_team_id',how='right').rename(columns={'name':'mission'}).groupby('enemy_team_id').first()
 mstl
 # %%
-mstlec = mstl.join(ec,how='left').reindex(columns=['mission','leader','effect_ext','member'])
+mstlec = mstl.join(ec,how='left').reindex(columns=['mission','leader','effect_ext','ai_name','member'])
 mstlec = mstlec.fillna({'mission':'','leader':'','member':'','effect_ext':0,})
 mstlec['effect_ext'] = mstlec.apply(lambda x: str(x['effect_ext']) if x['effect_ext'] > 0 else '',axis=1)
 mstlec
