@@ -45,36 +45,42 @@ jobs:
       - name: Commit-tw
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
+        if: ${{ steps.data-miner.outputs.commit-message-tw }}
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-tw }}
           repository: data/tw
       - name: Commit-kr
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
+        if: ${{ steps.data-miner.outputs.commit-message-kr }}
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-kr }}
           repository: data/kr
       - name: Commit-jp
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
+        if: ${{ steps.data-miner.outputs.commit-message-jp }}
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-jp }}
           repository: data/jp
       - name: Commit-us
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
+        if: ${{ steps.data-miner.outputs.commit-message-us }}
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-us }}
           repository: data/us
       - name: Commit-ch
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
+        if: ${{ steps.data-miner.outputs.commit-message-ch }}
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-ch }}
           repository: data/ch
       - name: Commit-at
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
+        if: ${{ steps.data-miner.outputs.commit-message-at }}
         with:
           commit_message: ${{ steps.data-miner.outputs.commit-message-at }}
           repository: data/at
