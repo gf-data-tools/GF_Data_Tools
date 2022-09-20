@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'rescue_event_history/doll_obtain_info.tsv'
+      - 'rescue_event_history/*.py'
   workflow_dispatch:
 
 jobs:

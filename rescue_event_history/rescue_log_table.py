@@ -74,7 +74,7 @@ styles = [
     {'selector': 'caption','props':'color:black;text-align: right;'},
 ] 
 width = [
-    {'selector': f'td:nth-child({c+1}),th:nth-child({c+1})','props':f'width: {w}em;'} for c,w in enumerate([2,8,3,8,6,8,6,10])
+    {'selector': f'td:nth-child({c+1}),th:nth-child({c+1})','props':f'width: {w}em;'} for c,w in enumerate([2,8,3,8,10,8,10,10])
 ]
 table.set_table_styles(styles+width)
 
