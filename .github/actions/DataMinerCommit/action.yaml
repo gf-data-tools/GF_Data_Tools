@@ -8,6 +8,9 @@ inputs:
   repository:
     description: Submodule path
     required: true
+  bot_token:
+    description: Dingtalk bot token
+    required: false
 
 runs:
   using: "composite"
@@ -23,3 +26,10 @@ runs:
         commit_message: ${{ inputs.commit_message }}
         file_pattern: ${{ inputs.repository }}
         push_options: --dry-run 
+    - name: Notify
+      shell: bash
+      if: ${{ inputs.bot_token }}
+      run: |
+        curl '${{ inputs.bot_token }}' \
+        -H 'Content-Type: application/json' \
+        -d '{"msgtype": "text","text": {"content":"[gf-data-tools] ${{ inputs.commit_message }}"}}'
