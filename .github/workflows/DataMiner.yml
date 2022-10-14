@@ -45,49 +45,49 @@ jobs:
       - name: Commit-tw
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
-        if: ${{ steps.data-miner.outputs.commit-message-tw }}
+        if: ${{ env.commit-message-tw }}
         with:
-          commit_message: ${{ steps.data-miner.outputs.commit-message-tw }}
+          commit_message: ${{ env.commit-message-tw }}
           repository: data/tw
           bot_token: ${{ secrets.DINGTALK_TOKEN }}
       - name: Commit-kr
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
-        if: ${{ steps.data-miner.outputs.commit-message-kr }}
+        if: ${{ env.commit-message-kr }}
         with:
-          commit_message: ${{ steps.data-miner.outputs.commit-message-kr }}
+          commit_message: ${{ env.commit-message-kr }}
           repository: data/kr
           bot_token: ${{ secrets.DINGTALK_TOKEN }}
       - name: Commit-jp
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
-        if: ${{ steps.data-miner.outputs.commit-message-jp }}
+        if: ${{ env.commit-message-jp }}
         with:
-          commit_message: ${{ steps.data-miner.outputs.commit-message-jp }}
+          commit_message: ${{ env.commit-message-jp }}
           repository: data/jp
           bot_token: ${{ secrets.DINGTALK_TOKEN }}
       - name: Commit-us
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
-        if: ${{ steps.data-miner.outputs.commit-message-us }}
+        if: ${{ env.commit-message-us }}
         with:
-          commit_message: ${{ steps.data-miner.outputs.commit-message-us }}
+          commit_message: ${{ env.commit-message-us }}
           repository: data/us
           bot_token: ${{ secrets.DINGTALK_TOKEN }}
       - name: Commit-ch
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
-        if: ${{ steps.data-miner.outputs.commit-message-ch }}
+        if: ${{ env.commit-message-ch }}
         with:
-          commit_message: ${{ steps.data-miner.outputs.commit-message-ch }}
+          commit_message: ${{ env.commit-message-ch }}
           repository: data/ch
           bot_token: ${{ secrets.DINGTALK_TOKEN }}
       - name: Commit-at
         continue-on-error: true
         uses: ./.github/actions/DataMinerCommit
-        if: ${{ steps.data-miner.outputs.commit-message-at }}
+        if: ${{ env.commit-message-at }}
         with:
-          commit_message: ${{ steps.data-miner.outputs.commit-message-at }}
+          commit_message: ${{ env.commit-message-at }}
           repository: data/at
           bot_token: ${{ secrets.DINGTALK_TOKEN }}
       - name: Push
