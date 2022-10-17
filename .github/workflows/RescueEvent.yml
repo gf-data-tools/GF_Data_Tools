@@ -48,4 +48,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "RescueEvent autoupdate at ${{ steps.current-time.outputs.formattedTime }}"
-          file_pattern: rescue_event_history/*.html gh-pages/rescue_event_history/*.html
+          file_pattern: rescue_event_history/* gh-pages/rescue_event_history/*.html
