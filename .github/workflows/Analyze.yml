@@ -11,17 +11,17 @@ jobs:
   post-process-on-ch-update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
       - name: Checkout ch data
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: gf-data-tools/gf-data-ch
           path: data/ch
           token: ${{ secrets.PERSONAL_TOKEN }}   
       - name: Checkout Uncensorship
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: gf-data-tools/anti-harmonization
           path: anti-harmonization
@@ -35,12 +35,10 @@ jobs:
           utcOffset: "+08:00"
 
       - name: Setup Python
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
-      - name: Install Python dependencies
-        run: |
-          pip install -r requirements.txt
+          python-version: '3.10'
+      - run: pip install -r requirements.txt
           
       - name: Analyze
         run: |
