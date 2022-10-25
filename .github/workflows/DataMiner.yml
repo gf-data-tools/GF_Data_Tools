@@ -20,7 +20,7 @@ jobs:
   gfl-data-miner-update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
           submodules: 'recursive'
@@ -29,14 +29,12 @@ jobs:
       - run: git config --global core.autocrlf input
 
       - name: Setup Python
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
+          python-version: '3.10'
           
-      - name: Install Data-Miner Dependencies
-        uses: py-actions/py-dependency-install@v3
-        with:
-          path: "data-miner/requirements.txt"
+      - run: "pip install -r data-miner/requirements.txt"
+
       - name: Data Miner
         id: data-miner
         run: | 
