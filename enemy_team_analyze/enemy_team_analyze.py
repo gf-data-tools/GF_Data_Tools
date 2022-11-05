@@ -40,7 +40,7 @@ ms = s.join(m,on='mission_id').drop(columns=['mission_id'])
 mstl = ms.join(tla,on='enemy_team_id',how='right').rename(columns={'name':'mission'}).groupby('enemy_team_id').first()
 mstl
 # %%
-mstlec = mstl.join(ec,how='left').reindex(columns=['mission','leader','effect_ext','ai_name','member'])
+mstlec = mstl.join(ec,how='right').reindex(columns=['mission','leader','effect_ext','ai_name','member'])
 mstlec = mstlec.fillna({'mission':'','leader':'','member':'','effect_ext':0,})
 mstlec['effect_ext'] = mstlec.apply(lambda x: str(x['effect_ext']) if x['effect_ext'] > 0 else '',axis=1)
 mstlec
