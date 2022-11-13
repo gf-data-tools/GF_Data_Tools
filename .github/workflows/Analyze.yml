@@ -56,4 +56,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "DataAnalyze autoupdate at ${{ steps.current-time.outputs.formattedTime }}"
-          file_pattern: outputs/catchdata.dat enemy_team_analyze/*
+          file_pattern: outputs/catchdata.dat enemy_team_analyze/* enemy_stats_analyze/*
