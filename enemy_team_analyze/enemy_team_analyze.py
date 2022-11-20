@@ -1,15 +1,18 @@
 # %%
 from gf_utils.stc_data import get_stc_data
 import os
-import csv
-import datetime
+import argparse
 import pandas as pd
 import re
 
 from pathlib import Path
 os.chdir(Path(__file__).resolve().parent)
+parser = argparse.ArgumentParser()
+parser.add_argument('-r','--region', type=str, default='ch')
+args = parser.parse_args()
+
 # %%
-region = 'ch'
+region = args.region
 stc_data = get_stc_data(
     stc_dir=f'../data/{region}/stc', 
     table_dir=f'../data/{region}/asset/table',
