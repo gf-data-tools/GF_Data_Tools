@@ -8,3 +8,4 @@ resource_downloader/dist
 *.egg-info
 .vscode
 test
+logs
