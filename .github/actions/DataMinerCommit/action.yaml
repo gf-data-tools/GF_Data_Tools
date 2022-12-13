@@ -17,12 +17,12 @@ runs:
   steps:
     - name: Commit-submodule
       id: commit-submodule
-      uses: ZeroRin/git-auto-commit-action@latest
+      uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: ${{ inputs.commit_message }}
         repository: ${{ inputs.repository }}
     - name: Commit-main
-      uses: ZeroRin/git-auto-commit-action@latest
+      uses: stefanzweifel/git-auto-commit-action@v4
       if: ${{ steps.commit-submodule.outputs.changes_detected }}
       with:
         commit_message: ${{ inputs.commit_message }}
