@@ -41,7 +41,8 @@ with open('doll_obtain_info.tsv', encoding='utf-8') as f:
             if end_time >= rescue_log[name]['last']['time']:
                 rescue_log[name]['last'] = {'event':event,'time':end_time}
 
-rescue_log = sorted(rescue_log.values(),key=lambda x:x['info']['id'])
+# rescue_log = sorted(rescue_log.values(),key=lambda x:x['info']['id'])
+rescue_log = sorted(rescue_log.values(),key=lambda x:(x['last']['time'] if x['last']['time']!=dstr2date('300101') else datetime.date(2000,1,1),x['first']['time'],x['info']['id']),reverse=True)
 
 # %%
 
@@ -74,7 +75,7 @@ styles = [
     {'selector': 'caption','props':'color:black;text-align: right;'},
 ] 
 width = [
-    {'selector': f'td:nth-child({c+1}),th:nth-child({c+1})','props':f'width: {w}em;'} for c,w in enumerate([2,8,3,8,10,8,10,10])
+    {'selector': f'td:nth-child({c+1}),th:nth-child({c+1})','props':f'width: {w}em;'} for c,w in enumerate([2,15,3,10,10,10,10,10])
 ]
 table.set_table_styles(styles+width)
 
