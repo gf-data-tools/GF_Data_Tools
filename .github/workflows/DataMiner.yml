@@ -39,6 +39,7 @@ jobs:
 
       - name: Data Miner
         id: data-miner
+        continue-on-error: true
         run: | 
           python data-miner/data_miner.py ${{ inputs.cmdargs || 'tw kr jp us ch at' }} ${{ github.event_name=='push' && '-f' || '' }}
       
