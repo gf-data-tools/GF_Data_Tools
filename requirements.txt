@@ -5,3 +5,4 @@ rich
 pandas
 git+https://github.com/gf-data-tools/gf-utils.git
 Jinja2
+UnityPy
