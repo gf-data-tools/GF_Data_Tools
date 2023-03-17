@@ -30,7 +30,7 @@ runs:
         push_options: --dry-run 
     - name: Notify
       shell: bash
-      if: ${{ inputs.bot_token && steps.commit-submodule.outputs.changes_detected }}
+      if: ${{ inputs.bot_token && steps.commit-submodule.outputs.changes_detected  == 'true'}}
       run: |
         curl '${{ inputs.bot_token }}' \
         -H 'Content-Type: application/json' \
