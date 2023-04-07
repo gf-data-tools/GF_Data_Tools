@@ -1,8 +1,3 @@
-[submodule "data-miner"]
-	path = data-miner
-	url = https://github.com/ZeroRin/gfl-data-miner-python.git
-	branch = main
-	update = rebase
 [submodule "anti-harmonization"]
 	path = anti-harmonization
 	url = https://github.com/gf-data-tools/anti-harmonization.git
