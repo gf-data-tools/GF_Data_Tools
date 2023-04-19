@@ -4,9 +4,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab or through HTTP API
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'on:
+    - cron: '0 0 * * *'
   repository_dispatch:
     types: [submodule_sync]
+    
 concurrency: repo_update
 
 jobs:
