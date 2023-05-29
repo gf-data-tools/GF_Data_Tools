@@ -20,12 +20,6 @@ jobs:
           repository: gf-data-tools/gf-data-ch
           path: data/ch
           token: ${{ secrets.PERSONAL_TOKEN }}   
-      - name: Checkout Uncensorship
-        uses: actions/checkout@v3
-        with:
-          repository: gf-data-tools/anti-harmonization
-          path: anti-harmonization
-          token: ${{ secrets.PERSONAL_TOKEN }}
           
       - name: Get current time
         uses: josStorer/get-current-time@v2
@@ -46,14 +40,9 @@ jobs:
           python enemy_team_analyze/enemy_team_analyze.py
           python enemy_stats_analyze/main.py
           echo "::endgroup::"
-
-          echo "::group::Anti Harmonization"
-          python anti-harmonization/main.py
-          cp anti-harmonization/catchdata.dat outputs/catchdata.dat
-          echo "::endgroup::"
-      
+          
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "DataAnalyze autoupdate at ${{ steps.current-time.outputs.formattedTime }}"
-          file_pattern: outputs/catchdata.dat enemy_team_analyze/* enemy_stats_analyze/*
+          file_pattern: enemy_team_analyze/* enemy_stats_analyze/*
