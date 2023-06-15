@@ -9,3 +9,4 @@ resource_downloader/dist
 .vscode
 test
 logs
+.idea
