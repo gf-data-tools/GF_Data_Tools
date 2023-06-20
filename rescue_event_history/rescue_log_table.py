@@ -1,13 +1,13 @@
 # %%
-from gf_utils import stc_data
-from gf_utils.stc_data import get_stc_data
-import os
 import csv
 import datetime
-import pandas as pd
+import os
 import re
-
 from pathlib import Path
+
+import pandas as pd
+from gf_utils import stc_data
+from gf_utils.stc_data import get_stc_data
 
 os.chdir(Path(__file__).resolve().parent)
 # %%
@@ -160,6 +160,6 @@ for (let i=0; i < col6s.length; i++) {{
 
 with open("rescue.html", "w", encoding="utf-8") as f:
     f.write(html_string.format(table=table.to_html()))
-df.to_csv("rescue.csv")
+df.to_csv("rescue.csv", index=False)
 
 # %%
