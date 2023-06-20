@@ -159,7 +159,7 @@ for (let i=0; i < col6s.length; i++) {{
 """
 
 with open("rescue.html", "w", encoding="utf-8") as f:
-    f.write(html_string.format(table=table.to_html()))
+    f.write(html_string.format(table=table.to_html(table_uuid="12345")))
 df.to_csv("rescue.csv", index=False)
 
 # %%
