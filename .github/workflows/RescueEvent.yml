@@ -36,7 +36,6 @@ jobs:
         shell: bash
         run: |
           python rescue_event_history/rescue_log_table.py 
-          python rescue_event_history/generate_gantt.py 
       - name: Prepare gh-pages
         shell: bash
         run: |
