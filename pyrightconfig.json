@@ -1,5 +1,7 @@
 {
     "exclude": [
-        "data/*"
+        "data/*",
+        ".git",
+        "test"
     ],
 }
